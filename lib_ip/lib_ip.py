@@ -53,10 +53,10 @@ def get_ip_default_gateway_or_localhost() -> Union[str, None]:
     host_ip = None
     try:
         host_ip = get_ip_default_gateway()
-    except TimeoutError:
-        if not host_ip:
-            logger.warning('can not get default gateway IP, setting localhost as IP')
-            host_ip = socket.gethostbyname('localhost')
+    except TimeoutError:                                                                    # pragma: no cover
+        if not host_ip:                                                                     # pragma: no cover
+            logger.warning('can not get default gateway IP, setting localhost as IP')       # pragma: no cover
+            host_ip = socket.gethostbyname('localhost')                                     # pragma: no cover
     finally:
         return host_ip
 
@@ -93,8 +93,8 @@ def get_ip_default_gateway() -> Union[str, None]:
         # doesn't even have to be reachable
         o_socket.connect(('1.1.1.1', 1))
         s_ip = str(o_socket.getsockname()[0])  # type: Union[str, None]
-    except Exception:
-        s_ip = None
+    except Exception:           # pragma: no cover
+        s_ip = None             # pragma: no cover
     finally:
         o_socket.close()
     return s_ip
@@ -142,12 +142,12 @@ def is_valid_ipv4_address(address: str) -> bool:
     """
     try:
         socket.inet_pton(socket.AF_INET, address)
-    except AttributeError:                      # no inet_pton here, sorry
-        try:
-            socket.inet_aton(address)
-        except socket.error:
-            return False
-        return address.count('.') == 3
+    except AttributeError:                      # pragma: no cover      # no inet_pton here, sorry
+        try:                                    # pragma: no cover
+            socket.inet_aton(address)           # pragma: no cover
+        except socket.error:                    # pragma: no cover
+            return False                        # pragma: no cover
+        return address.count('.') == 3          # pragma: no cover
     except socket.error:                        # not a valid address
         return False
 
