@@ -1,6 +1,7 @@
 # STDLIB
 import logging
 import socket
+import sys
 from typing import Union
 
 # OWN
@@ -12,19 +13,23 @@ logger = logging.getLogger()
 
 def get_ip_from_hostname_or_default_gateway_or_localhost(host: Union[str, None] = None) -> Union[str, None]:
     """
-
+    >>> import unittest
     >>> result = get_ip_from_hostname_or_default_gateway_or_localhost(lib_platform.hostname_short)
     >>> assert is_valid_ip_adress(result)
     >>> result = get_ip_from_hostname_or_default_gateway_or_localhost() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     >>> assert is_valid_ip_adress(result)
     >>> result = get_ip_from_hostname_or_default_gateway_or_localhost('localhost')
     >>> assert is_valid_ip_adress(result)
-    >>> result = get_ip_from_hostname_or_default_gateway_or_localhost('non_exist')  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    Traceback (most recent call last):
-    ...
-    ...socket.gaierror: ...
+    >>> result = get_ip_from_hostname_or_default_gateway_or_localhost('127.0.0.1')
+    >>> assert is_valid_ip_adress(result)
+    >>> # _socket for pypy3
+    >>> if sys.implementation == 'pypy':
+    ...     unittest.TestCase().assertRaises(_socket.gaierror, get_ip_from_hostname_or_default_gateway_or_localhost, 'non_exist')
+    ... else:
+    ...     unittest.TestCase().assertRaises(socket.gaierror, get_ip_from_hostname_or_default_gateway_or_localhost, 'non_exist')
     >>> result = get_ip_from_hostname_or_default_gateway_or_localhost(None)  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     >>> assert is_valid_ip_adress(result)
+
 
     """
     if host is None:
