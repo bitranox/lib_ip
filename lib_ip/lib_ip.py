@@ -22,21 +22,20 @@ def get_ip_from_hostname_or_default_gateway_or_localhost(host: Union[str, None] 
     >>> assert is_valid_ip_adress(result)
     >>> result = get_ip_from_hostname_or_default_gateway_or_localhost('127.0.0.1')
     >>> assert is_valid_ip_adress(result)
-    >>> # _socket for pypy3
-    >>> if sys.implementation == 'pypy':
-    ...     unittest.TestCase().assertRaises(_socket.gaierror, get_ip_from_hostname_or_default_gateway_or_localhost, 'non_exist')
-    ... else:
-    ...     unittest.TestCase().assertRaises(socket.gaierror, get_ip_from_hostname_or_default_gateway_or_localhost, 'non_exist')
+    >>> unittest.TestCase().assertRaises(ConnectionError, get_ip_from_hostname_or_default_gateway_or_localhost, 'non_exist')
     >>> result = get_ip_from_hostname_or_default_gateway_or_localhost(None)  # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     >>> assert is_valid_ip_adress(result)
-
-
     """
     if host is None:
         host_ip = get_ip_default_gateway_or_localhost()
         return host_ip
 
-    host_ip = socket.gethostbyname(host)
+    try:
+        host_ip = socket.gethostbyname(host)
+    # under pypy _socket.gaierror, anywhere else socket.gaierror if IP can not be resolved
+    except Exception:
+        raise ConnectionError('can not resolve Hostname "{host}"'.format(host=host))
+
     if host.strip().lower() == 'localhost':
         return host_ip
     if ip_is_localhost(host_ip):
@@ -169,3 +168,18 @@ def is_valid_ipv6_address(address: str) -> bool:
     except socket.error:  # not a valid address
         return False
     return True
+
+
+def nslookup(hostname: str) -> str:
+    """
+    >>> import unittest
+    >>> assert nslookup('www.rotek.at') is not None
+    >>> unittest.TestCase().assertRaises(ConnectionError, nslookup, 'unknown.host.com')
+
+    """
+    try:
+        host_ip = socket.gethostbyname(hostname)
+        return host_ip
+    # under pypy _socket.gaierror, anywhere else socket.gaierror if IP can not be resolved
+    except Exception:
+        raise ConnectionError('can not resolve Hostname "{hostname}"'.format(hostname=hostname))
