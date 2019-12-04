@@ -5,8 +5,8 @@ import sys
 from typing import Union
 
 # OWN
-import lib_ping
-import lib_platform
+import lib_ping         # type: ignore
+import lib_platform     # type: ignore
 
 logger = logging.getLogger()
 

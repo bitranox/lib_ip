@@ -5,16 +5,16 @@ import pathlib
 from typing import Dict, List
 
 try:
-    from setuptools import setup
+    from setuptools import setup        # type: ignore
 except ImportError:
     from distutils.core import setup
 
 package_name = 'lib_ip'                                                             # type: str
 required = ['lib_ping @ git+https://github.com/bitranox/lib_ping.git',
             'lib_platform @ git+https://github.com/bitranox/lib_platform.git',
-            ]                                                                       # type: List
-required_for_tests = list()                                                         # type: List
-entry_points = dict()                                                               # type: Dict
+            ]                                                                       # type: List[str]
+required_for_tests = list()                                                         # type: List[str]
+entry_points = dict()                                                               # type: Dict[str, str]
 
 
 def get_version(dist_directory: str) -> str:
