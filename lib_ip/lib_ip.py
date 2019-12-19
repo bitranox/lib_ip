@@ -66,7 +66,7 @@ def ip_is_localhost(host_ip: str) -> bool:
     True
     >>> ip_is_localhost('localhost')
     True
-    >>> ip_is_localhost('192.168.168.12')
+    >>> ip_is_localhost('192.168.168.17')
     False
     >>> ip_is_localhost('192.168.168.254')
     False
