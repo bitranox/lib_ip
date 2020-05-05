@@ -1,7 +1,6 @@
 # STDLIB
 import logging
 import socket
-import sys
 from typing import Union
 
 # OWN
@@ -27,7 +26,7 @@ def get_ip_from_hostname_or_default_gateway_or_localhost(host: Union[str, None] 
     >>> assert is_valid_ip_adress(result)
     """
     if host is None:
-        host_ip = get_ip_default_gateway_or_localhost()
+        host_ip = get_host_ip_or_localhost()
         return host_ip
 
     try:
@@ -39,25 +38,22 @@ def get_ip_from_hostname_or_default_gateway_or_localhost(host: Union[str, None] 
     if host.strip().lower() == 'localhost':
         return host_ip
     if ip_is_localhost(host_ip):
-        host_ip = get_ip_default_gateway_or_localhost()
+        host_ip = get_host_ip_or_localhost()
     return host_ip
 
 
-def get_ip_default_gateway_or_localhost() -> Union[str, None]:
+def get_host_ip_or_localhost() -> Union[str, None]:
     """
-    >>> result = get_ip_default_gateway_or_localhost()
+    >>> result = get_host_ip_or_localhost()
     >>> assert is_valid_ip_adress(result)
 
     """
-    host_ip = None
-    try:
-        host_ip = get_ip_default_gateway()
-    except TimeoutError:                                                                    # pragma: no cover
-        if not host_ip:                                                                     # pragma: no cover
-            logger.warning('can not get default gateway IP, setting localhost as IP')       # pragma: no cover
-            host_ip = socket.gethostbyname('localhost')                                     # pragma: no cover
-    finally:
-        return host_ip
+    host_ip = get_host_ip()
+
+    if not host_ip:                                                                     # pragma: no cover
+        logger.warning('can not get default gateway IP, setting localhost as IP')       # pragma: no cover
+        host_ip = socket.gethostbyname('localhost')                                     # pragma: no cover
+    return host_ip
 
 
 def ip_is_localhost(host_ip: str) -> bool:
@@ -80,9 +76,9 @@ def ip_is_localhost(host_ip: str) -> bool:
         return False
 
 
-def get_ip_default_gateway() -> Union[str, None]:
+def get_host_ip() -> Union[str, None]:
     """
-    >>> result = get_ip_default_gateway()
+    >>> result = get_host_ip()
     >>> assert is_valid_ip_adress(result)
 
     """
