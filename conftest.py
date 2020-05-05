@@ -20,7 +20,7 @@ def pytest_cmdline_preparse(args: List[str]) -> None:
     # add mypy option if not pypy - so mypy will be called with setup.py install test
     # add mypy only on 3.x versions
     # mypy does not find some functions on python 3.6
-    if platform.python_implementation() != "PyPy" and sys.version_info >= (3, 5) and sys.version_info != (3, 6):
+    if platform.python_implementation() != "PyPy" and sys.version_info >= (3, 5) and sys.version_info != (3, 6):  # type: ignore
         args[:] = ["--mypy"] + args
 
     # for python 3.x use --pycodestyle, for python 2.7 use --pep8
