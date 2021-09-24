@@ -33,7 +33,7 @@ def get_ip_from_hostname_or_default_gateway_or_localhost(host: Union[str, None] 
         host_ip = socket.gethostbyname(host)
     # under pypy _socket.gaierror, anywhere else socket.gaierror if IP can not be resolved
     except Exception:
-        raise ConnectionError('can not resolve Hostname "{host}"'.format(host=host))
+        raise ConnectionError(f'can not resolve Hostname "{host}"')
 
     if host.strip().lower() == 'localhost':
         return host_ip
