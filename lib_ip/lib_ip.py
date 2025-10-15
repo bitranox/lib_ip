@@ -13,7 +13,7 @@ logger = logging.getLogger()
 def get_ip_from_hostname_or_default_gateway_or_localhost(host: Union[str, None] = None) -> Union[str, None]:
     """
     >>> import unittest
-    >>> result = get_ip_from_hostname_or_default_gateway_or_localhost(lib_platform.hostname_short)
+    >>> result = get_ip_from_hostname_or_default_gateway_or_localhost(lib_platform.get_hostname_short())
     >>> assert is_valid_ip_adress(result)
     >>> result = get_ip_from_hostname_or_default_gateway_or_localhost() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     >>> assert is_valid_ip_adress(result)
